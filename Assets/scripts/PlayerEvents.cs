@@ -10,6 +10,9 @@ public class PlayerEvents : MonoBehaviour
         playerMotion = GetComponentInParent<PlayerMotion>();
     }
 
+    /// <summary>
+    /// Called when the player Lands.
+    /// </summary>
     public void Land()
     {
         playerMotion.FallEnd();
