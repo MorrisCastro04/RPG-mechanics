@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 /// <summary>
 /// Controls the player's motion, including movement, rotation, and jumping mechanics.
@@ -12,6 +13,16 @@ public class PlayerMotion : MonoBehaviour
     /// Reference to the main camera's transform, used for directional movement.
     /// </summary>
     public Transform camara;
+
+    /// <summary>
+    /// Reference to the Cinemachine FreeLook camera, used for directional movement.
+    /// </summary>
+    public CinemachineFreeLook cinemachineFreeLook;
+
+    /// <summary>
+    /// Reference to the target where the camera is looking at.
+    /// </summary>
+    public GameObject targetCam;
 
     /// <summary>
     /// Speed at which the player moves.
@@ -49,6 +60,11 @@ public class PlayerMotion : MonoBehaviour
     public float gravityMultiplier = 1;
 
     /// <summary>
+    /// Speed at which the camera rotates around the Y-axis and X-axis.
+    /// </summary>
+    public float rotationSpeedCamX, rotationSpeedCamY;
+
+    /// <summary>
     /// Boolean flag indicating whether the player is on the ground.
     /// </summary>
     public bool onGround;
@@ -62,6 +78,7 @@ public class PlayerMotion : MonoBehaviour
     /// Boolean flag to stop the player's movement.
     /// </summary>
     public bool stop;
+
 
     /// <summary>
     /// Layer mask used to identify ground surfaces.
@@ -82,6 +99,11 @@ public class PlayerMotion : MonoBehaviour
     /// Stores the player's movement input values.
     /// </summary>
     private Vector2 _move;
+
+    /// <summary>
+    /// movment of the mpuse
+    /// </summary>
+    private Vector2 m_look;
 
     /// <summary>
     /// Stores the calculated movement direction.
@@ -202,6 +224,18 @@ public class PlayerMotion : MonoBehaviour
             rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
         }
         anim.SetBool("OnAir", true);
+    }
+
+    /// <summary>
+    /// Handles camera rotation input from the player.
+    /// </summary>
+    /// <param name="value">Vector 2 of the delta mouse</param>
+    public void OnCam(InputValue value)
+    {
+        m_look = value.Get<Vector2>();
+        /// Rotate the camera around the player
+        cinemachineFreeLook.m_XAxis.Value += m_look.x * rotationSpeedCamX;
+        cinemachineFreeLook.m_YAxis.Value += m_look.y * rotationSpeedCamY * Time.fixedDeltaTime;
     }
 
     /// <summary>
